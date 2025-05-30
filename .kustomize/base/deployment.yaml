@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testtech-selector
+spec:
+  replicas: 1
+  template:
+    spec:
+      serviceAccountName: testtech-selector
+      containers:
+        - name: testtech-selector
+          image: testtech-selector-image
+          envFrom:
+            - configMapRef:
+                name: testtech-selector
+            - secretRef:
+                name: testtech-selector
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 500m
+              ephemeral-storage: 200Mi
+            limits:
+              memory: 4096Mi
+              cpu: 1500m
+              ephemeral-storage: 1500Mi

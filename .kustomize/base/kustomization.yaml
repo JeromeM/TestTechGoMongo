@@ -1,0 +1,12 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+
+configMapGenerator:
+  - name: testtech-selector
+    envs:
+      - .env
+
+commonLabels:
+  app.kubernetes.io/name: testtech-selector
+  app.kubernetes.io/managed-by: kustomize
