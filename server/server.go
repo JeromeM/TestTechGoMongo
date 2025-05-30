@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -39,10 +40,8 @@ func (s *Server) Serve(port string) {
 	}
 
 	go func() {
-		select {
-		case <-sigChan:
-			kill()
-		}
+		<-sigChan
+		kill()
 	}()
 
 	r := chi.NewRouter()
@@ -64,7 +63,7 @@ func (s *Server) Serve(port string) {
 
 	<-sigChan
 
-	if err := server.Shutdown(nil); err != nil {
+	if err := server.Shutdown(context.TODO()); err != nil {
 		fmt.Printf("Erreur lors de l'arrêt du serveur: %v\n", err)
 	}
 
@@ -82,10 +81,6 @@ func (s *Server) handleGetTasks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pagination := client.GetPagination(params)
-	if err != nil {
-		internalServerError(w, err)
-		return
-	}
 
 	res := schemas.Tasks{
 		Tasks:      tasks,
